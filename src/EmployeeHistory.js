@@ -1,33 +1,32 @@
 import React, { Component } from 'react';
-import './employee_assets.css';
-import MaterialIcon from 'material-icons-react';
 
-const List = ({items, assign}) => (
+function formatDate(dateString) {
+  var date = new Date(dateString);
+  return date.getDay() + "/" + date.getMonth() + "/" + date.getFullYear();
+}
+
+const List = ({items}) => (
   items.map( (item) => (
   <tr key={item.id.toString()}>
-    <td>{item.name}</td>
-    <td>{item.employeeId}</td>
-    <td>{item.notes}</td>
-    <td>{item.blocked ? "Blocked" : "Unblocked"}</td>
-    <td>{item.serialNumber}</td>
-    <td className="action">
-      <div onClick={() => assign(item.id)}><MaterialIcon icon="add" color='#000000'/></div>
-    </td>
-    
+    <td>{item.id}</td>
+    <td>{item.fromEmployee}</td>
+    <td>{item.toEmployee}</td>
+    <td>{item.asset}</td>
+    <td>{formatDate(item.date)}</td>
   </tr>
   ))
 );
 
-class EmployeeAssets extends Component {
+class EmployeeHistory extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      assets: []
+      records: []
     };
   }
 
-  getAssets = () => {
-    fetch('http://assets.ulises.life/assets',
+  getRecords = (name) => {
+    fetch('http://assets.ulises.life/records',
           {
             method: 'GET',
             headers: {
@@ -40,62 +39,36 @@ class EmployeeAssets extends Component {
         console.log('Response status: ', response.status);
         return response.json();
       })
-      .then((assetsList) => {
-        console.log('Response: ', assetsList);
-        this.setState({assets: assetsList});
+      .then((records) => {
+        console.log('Response: ', records);
+        let filteredRecords = records.filter(function (el) {
+                                return el.fromEmployee === name;
+                              });
+        this.setState({records: filteredRecords});
       })
       .catch(function() {
         console.log("Unauthorized");
     })
   }
 
-  assignAsset = (empId, assetId) => {
-    console.log('Assigning asset ' + assetId + ' to employee ', empId);
-    fetch('http://assets.ulises.life/assets/' + assetId,
-          {
-            method: 'PATCH',
-            headers: {
-              'Accept': 'application/json, text/plain, */*',
-              'Content-Type': 'application/json',
-              'Authorization': localStorage.getItem('token')
-            },
-            body: JSON.stringify({employeeId: empId})
-          })
-      .then((response) => {
-        console.log('Response status: ', response.status);
-        this.getAssets();
-      })
-      .catch(function() {
-        console.log("Error creating asset");
-    })
-  }
-
-  assignCallBack(assetId) {
-    console.log('assignCallBack: ', assetId);
-    this.assignAsset(this.props.match.params.id, assetId);
-  }
-
   componentDidMount() {
-    this.getAssets();
+    this.getRecords(this.props.match.params.name);
   }
 
   render() {
     return (
       <div style={{width: 1000, margin: '0 auto'}}>
-        
         <div>
-          <h1>Asset list:</h1>
           <table>
 	        <tbody>
           <tr>
-            <th>Name</th>
-            <th>Employee Id</th>
-            <th>Notes</th>
-            <th>Blocked</th>
-            <th>Serial</th>
-            <th></th>
+            <th>id</th>
+            <th>From employee</th>
+            <th>To employee</th>
+            <th>Asset</th>
+            <th>Date</th>
           </tr>
-	        <List items={this.state.assets} assign={(id) => this.assignCallBack(id)}/>
+	        <List items={this.state.records}/>
 	        </tbody>
           </table>
         </div>
@@ -104,4 +77,4 @@ class EmployeeAssets extends Component {
   }
 }
 
-export default EmployeeAssets;
+export default EmployeeHistory;
