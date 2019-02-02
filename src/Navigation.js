@@ -20,12 +20,10 @@ class Navigation extends React.Component {
           console.log('Result: ', response);
           response.json().then((auth) => {
             console.log('Result: ', auth);
-            login(true, "Bearer " + auth.token)
+            login(true, "Bearer " + auth.token);
           })
         } else {
-          //login(false, "")
-          // Ignore server internal error, service is down at the moment.
-          login(true, "Bearer dummy token")
+          login(false, "");
         }
       })
       .catch(function() {

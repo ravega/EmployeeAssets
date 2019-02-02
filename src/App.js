@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Navigation from './Navigation';
 import Menu from './Menu';
 import Employees from './Employees';
+import EmployeeHistory from './EmployeeHistory';
+import EmployeeAssets from './EmployeeAssets';
 import Assets from './Assets';
 import {Route} from 'react-router-dom';
 //import AuthRoute from './AuthRoute';
@@ -37,7 +39,9 @@ class App extends Component {
         </div>
 
         <Route path='/employees' component={Employees} />
-        <Route path='/assets' component={Assets} />
+        <Route exact path='/assets' component={Assets} />
+        <Route path='/assets/:id' component={EmployeeAssets} />
+        <Route path='/employee/:name' component={EmployeeHistory} />
       </div>
     );
   }

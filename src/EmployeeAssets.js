@@ -1,33 +1,33 @@
 import React, { Component } from 'react';
-import {Link} from 'react-router-dom';
 import './employee_assets.css';
 import MaterialIcon from 'material-icons-react';
 
-const List = ({items}) => (
+const List = ({items, assign}) => (
   items.map( (item) => (
   <tr key={item.id.toString()}>
-    <td>{item.id}</td>
     <td>{item.name}</td>
+    <td>{item.employeeId}</td>
+    <td>{item.notes}</td>
+    <td>{item.blocked ? "Blocked" : "Unblocked"}</td>
+    <td>{item.serialNumber}</td>
     <td className="action">
-      <Link to={`/assets/${item.id}`}><MaterialIcon icon="edit" color='#000000'/></Link>
+      <div onClick={() => assign(item.id)}><MaterialIcon icon="add" color='#000000'/></div>
     </td>
-    <td className="action">
-      <Link to={`/employee/${item.name}`}><MaterialIcon icon="visibility" color='#000000'/></Link>
-    </td>
+    
   </tr>
   ))
 );
 
-class Employees extends Component {
+class EmployeeAssets extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      employees: []
+      assets: []
     };
   }
 
-  getEmployees = () => {
-    fetch('http://assets.ulises.life/employees',
+  getAssets = () => {
+    fetch('http://assets.ulises.life/assets',
           {
             method: 'GET',
             headers: {
@@ -40,60 +40,62 @@ class Employees extends Component {
         console.log('Response status: ', response.status);
         return response.json();
       })
-      .then((employeList) => {
-        console.log('Response: ', employeList);
-        this.setState({employees: employeList});
+      .then((assetsList) => {
+        console.log('Response: ', assetsList);
+        this.setState({assets: assetsList});
       })
       .catch(function() {
         console.log("Unauthorized");
     })
   }
 
-  addEmployee = (userName) => {
-    fetch('http://assets.ulises.life/employees',
+  assignAsset = (empId, assetId) => {
+    console.log('Assigning asset ' + assetId + ' to employee ', empId);
+    fetch('http://assets.ulises.life/assets/' + assetId,
           {
-            method: 'POST',
+            method: 'PATCH',
             headers: {
               'Accept': 'application/json, text/plain, */*',
               'Content-Type': 'application/json',
               'Authorization': localStorage.getItem('token')
             },
-            body: JSON.stringify({name: userName})
+            body: JSON.stringify({employeeId: empId})
           })
       .then((response) => {
         console.log('Response status: ', response.status);
+        this.getAssets();
       })
       .catch(function() {
-        console.log("Error creating employee");
+        console.log("Error creating asset");
     })
   }
 
+  assignCallBack(assetId) {
+    console.log('assignCallBack: ', assetId);
+    this.assignAsset(this.props.match.params.id, assetId);
+  }
+
   componentDidMount() {
-    this.getEmployees();
+    this.getAssets();
   }
 
   render() {
     return (
       <div style={{width: 1000, margin: '0 auto'}}>
+        
         <div>
-          <input type="text" 
-                  ref={ node => {this.userName = node} } 
-                  style={{color: 'black'}}/>
-          <span className="action">
-            <MaterialIcon icon="add_box" color='#000000' onClick={() => this.addEmployee(this.userName.value)}/>
-          </span>
-        </div>
-        <div>
-          <h1>Employe list:</h1>
+          <h1>Asset list:</h1>
           <table>
 	        <tbody>
           <tr>
-            <th>Id</th>
             <th>Name</th>
-            <th>Assets</th>
-            <th>History</th>
+            <th>Employee Id</th>
+            <th>Notes</th>
+            <th>Blocked</th>
+            <th>Serial</th>
+            <th></th>
           </tr>
-	        <List items={this.state.employees} />
+	        <List items={this.state.assets} assign={(id) => this.assignCallBack(id)}/>
 	        </tbody>
           </table>
         </div>
@@ -102,4 +104,4 @@ class Employees extends Component {
   }
 }
 
-export default Employees;
+export default EmployeeAssets;
