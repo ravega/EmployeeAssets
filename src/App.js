@@ -30,18 +30,18 @@ class App extends Component {
   render() {
     let intro = <Info/>
     if (this.state.isLoggedIn)
-      intro = <Menu/>
+      intro = <Menu>
+                <Route path='/employees' component={Employees} />
+                <Route exact path='/assets' component={Assets} />
+                <Route path='/assets/:id' component={EmployeeAssets} />
+                <Route path='/employee/:name' component={EmployeeHistory} />
+              </Menu>
     return (
       <div>
         <Navigation userLoggedIn={this.state.isLoggedIn} login={this.setLogin}/>
         <div className="container">
           {intro}
         </div>
-
-        <Route path='/employees' component={Employees} />
-        <Route exact path='/assets' component={Assets} />
-        <Route path='/assets/:id' component={EmployeeAssets} />
-        <Route path='/employee/:name' component={EmployeeHistory} />
       </div>
     );
   }

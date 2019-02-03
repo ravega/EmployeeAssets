@@ -17,6 +17,7 @@ class Menu extends Component {
           </ul>
 
           <hr/>
+          {this.props.children}
       </div>
     );
   }

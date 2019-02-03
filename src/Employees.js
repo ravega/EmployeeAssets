@@ -84,7 +84,6 @@ class Employees extends Component {
           </span>
         </div>
         <div>
-          <h1>Employe list:</h1>
           <table>
 	        <tbody>
           <tr>

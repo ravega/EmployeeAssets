@@ -95,7 +95,6 @@ class Assets extends Component {
           </span>
         </div>
         <div>
-          <h1>Asset list:</h1>
           <table>
 	        <tbody>
           <tr>
