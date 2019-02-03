@@ -5,26 +5,26 @@ import Employees from './Employees';
 import EmployeeHistory from './EmployeeHistory';
 import EmployeeAssets from './EmployeeAssets';
 import Assets from './Assets';
+import Info from './Info';
 import {Route} from 'react-router-dom';
 //import AuthRoute from './AuthRoute';
-
-const Info = (props) => (
-    <h1>Please log in.</h1>
-);
 
 class App extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      isLoggedIn: false
+      isLoggedIn: (localStorage.getItem('token') !== null)
     };
   }
 
   setLogin = (logged, token) => {
     this.setState({isLoggedIn: logged})
     if(logged) localStorage.setItem('token', token)
-    else localStorage.removeItem('token')
+    else {
+      localStorage.removeItem('token')
+      window.location.href = "/"
+    }
   }
 
   render() {

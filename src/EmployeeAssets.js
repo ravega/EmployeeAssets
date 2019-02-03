@@ -84,7 +84,6 @@ class EmployeeAssets extends Component {
       <div style={{width: 1000, margin: '0 auto'}}>
         
         <div>
-          <h1>Asset list:</h1>
           <table>
 	        <tbody>
           <tr>

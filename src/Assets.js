@@ -57,11 +57,12 @@ class Assets extends Component {
             },
             body: JSON.stringify({name: assetName,
                                     notes: assetNotes,
-                                    blocked: assetBlocked,
+                                    blocked: assetBlocked === 'on',
                                     serialNumber: assetSerialNumber})
           })
       .then((response) => {
         console.log('Response status: ', response.status);
+        this.getAssets();
       })
       .catch(function() {
         console.log("Error creating asset");
