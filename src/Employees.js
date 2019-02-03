@@ -62,6 +62,7 @@ class Employees extends Component {
           })
       .then((response) => {
         console.log('Response status: ', response.status);
+        this.getEmployees();
       })
       .catch(function() {
         console.log("Error creating employee");
