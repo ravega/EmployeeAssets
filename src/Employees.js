@@ -77,12 +77,13 @@ class Employees extends Component {
     return (
       <div style={{width: 1000, margin: '0 auto'}}>
         <div>
-          <input type="text" 
+          <input type="text"
+                  className="form-control"
                   ref={ node => {this.userName = node} } 
                   style={{color: 'black'}}/>
-          <span className="action">
+          <button className="action form-control">
             <MaterialIcon icon="add_box" color='#000000' onClick={() => this.addEmployee(this.userName.value)}/>
-          </span>
+          </button>
         </div>
         <div>
           <table>

@@ -77,23 +77,29 @@ class Assets extends Component {
     return (
       <div style={{width: 1000, margin: '0 auto'}}>
         <div>
-          <input type="text" 
+          <input type="text"
+                  className="form-control" 
                   ref={ node => {this.assetName = node} }
                   placeholder="Asset name"
                   style={{color: 'black'}}/>
           <input type="text" 
+                  className="form-control"
                   ref={ node => {this.assetNotes = node} } 
                   placeholder="Asset notes"
                   style={{color: 'black'}}/>
-          <input type="checkbox"
-                  ref={ node => {this.assetBlocked = node} } />
           <input type="text" 
+                  className="form-control"
                   ref={ node => {this.assetSerialNumber = node} } 
                   placeholder="Serial number"
                   style={{color: 'black'}}/>
-          <span className="action">
+          <label>
+            <input type="checkbox"
+                  ref={ node => {this.assetBlocked = node} } />
+            Blocked
+          </label>
+          <button className="action form-control">
             <MaterialIcon icon="add_box" color='#000000' onClick={() => this.addAssets(this.assetName.value, this.assetNotes.value, this.assetBlocked.value, this.assetSerialNumber.value)}/>
-          </span>
+          </button>
         </div>
         <div>
           <table>
